@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Linq;
 using System.Windows.Input;
 using ReactiveUI;
 using DynamicData;
@@ -73,6 +74,11 @@ namespace Avalonia.Preview.ViewModels
       this.subscriptions.Add(
         this.WhenAnyValue(vm => vm.SelectedControl)
           .Subscribe(vm => controlTypeService.SelectedControlType = vm?.ControlType));
+      
+      this.subscriptions.Add(
+        controlTypeService.WhenAnyValue(s => s.SelectedControlType)
+          .Subscribe(type => this.SelectedControl = this.controls.FirstOrDefault(vm => vm.ControlType == type))
+        );
 
       this.subscriptions.Add(
          controlService.WhenAnyValue(s => s.Control)
