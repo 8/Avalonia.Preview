@@ -13,5 +13,6 @@
     <PackageReference Include="Avalonia.Desktop" Version="0.9.12" />
     <PackageReference Include="Avalonia.ReactiveUI" Version="0.9.12" />
     <PackageReference Include="FluentAssertions" Version="5.10.3" />
+    <PackageReference Include="xunit.extensibility.execution" Version="2.4.0" />
   </ItemGroup>
 </Project>

@@ -5,21 +5,21 @@ namespace Avalonia.Preview.Services
 {
   public interface IFileService
   {
-    string File { get; set; }
+    string SelectedFile { get; set; }
   }
   
   public class FileService : ReactiveObject, IFileService
   {
-    string file;
-    public string File
+    string selectedFile;
+    public string SelectedFile
     {
-      get => file;
-      set => this.RaiseAndSetIfChanged(ref file, value);
+      get => selectedFile;
+      set => this.RaiseAndSetIfChanged(ref selectedFile, value);
     }
 
     public FileService(IRecentFileService recentFileService)
     {
-      this.File = recentFileService.RecentFiles.Items.FirstOrDefault();
+      this.SelectedFile = recentFileService.RecentFiles.Items.FirstOrDefault();
     }
   }
 }

@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Windows.Input;
+using ReactiveUI;
 using DynamicData;
 using DynamicData.Alias;
-using ReactiveUI;
 using Avalonia.Controls;
 using Avalonia.Preview.Services;
 
@@ -61,7 +61,7 @@ namespace Avalonia.Preview.ViewModels
     {
       this.assemblyService = assemblyService;
       this.LoadCommand = ReactiveCommand.Create(() => loadAssemblyService.File = this.File);
-      this.File = fileService.File;
+      this.File = fileService.SelectedFile;
 
       this.subscriptions.Add(
         controlTypeService.ControlTypes.Connect()
@@ -78,7 +78,7 @@ namespace Avalonia.Preview.ViewModels
          controlService.WhenAnyValue(s => s.Control)
            .Subscribe(c => this.Control = c));
 
-      this.Control = new TextBlock {Text = "Default Value"};
+      this.Control = null;
     }
 
     static ControlViewModel CreateControlViewModel(Type controlType)
