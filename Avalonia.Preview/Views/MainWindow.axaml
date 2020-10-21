@@ -1,6 +1,7 @@
 ﻿<Window xmlns="https://github.com/avaloniaui"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:vm="clr-namespace:Avalonia.Preview.ViewModels;assembly=Avalonia.Preview"
+        xmlns:v="clr-namespace:Avalonia.Preview.Views;assembly=Avalonia.Preview"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
@@ -8,35 +9,57 @@
         Icon="/Assets/avalonia-logo.ico"
         Title="Avalonia.Preview"
         Width="800"
-        Height="600">
-
-  <Design.DataContext>
-    <vm:MainWindowViewModel/>
-  </Design.DataContext>
-
+        Height="300"
+        >
+  
   <Grid RowDefinitions="Auto, Auto, *">
-    <Grid RowDefinitions="Auto" ColumnDefinitions="Auto, *, Auto">
+    <Grid ColumnDefinitions="Auto, *, Auto" RowDefinitions="Auto, Auto, Auto">
+      <Grid.Styles>
+        <Style Selector="Button">
+          <!--<Setter Property="Margin" Value="4,2,4,2" />-->
+        </Style>
+        <Style Selector="TextBlock">
+          <Setter Property="Margin" Value="4,2,4,2" />
+          <Setter Property="HorizontalAlignment" Value="Right" />
+          <Setter Property="VerticalAlignment" Value="Center" />
+        </Style>
+        <Style Selector="TextBox">
+          <Setter Property="Margin" Value="4,2,4,2" />
+        </Style>
+        <Style Selector="ComboBox">
+          <Setter Property="Margin" Value="4,2,4,2" />
+          <Setter Property="MinHeight" Value="24" />
+        </Style>
+      </Grid.Styles>
+
       <TextBlock Text="File" />
       <TextBox Grid.Column="1" Text="{Binding File}" />
       <Button Grid.Column="2" Content="Load" Command="{Binding LoadCommand}" />
+      
+      <TextBlock Grid.Row="1" Grid.Column="0" Text="Control Type" />
+      <ComboBox Grid.Row="1" Grid.Column="1"
+                Items="{Binding Controls}"
+                SelectedItem="{Binding SelectedControl}"
+                />
+
+      <!--<TextBlock Grid.Row="2" Text="Preview" />-->
     </Grid>
 
-    <Grid Grid.Row="1" ColumnDefinitions="Auto,  *">
-      <TextBlock Grid.Column="0" Text="Control Type" />
-      <DropDown Grid.Column="1" Items="{Binding Controls}" SelectedItem="{Binding SelectedControl, Mode=TwoWay}" />
+    <Grid Grid.Row="1" ColumnDefinitions="*">
+      <TextBlock Text="Preview" Margin="20, 20, 0, 0" FontSize="12" HorizontalAlignment="Left" />
     </Grid>
 
-    <!--<ContentControl Grid.Row="2" Content="{Binding Content}" />-->
-    <!--<ContentControl Grid.Row="2" Content="{Binding Content}">-->
-      <!--<TextBlock Text="Defualt vaule" />-->
-    <!--</ContentControl>-->
-
-    <!--<ContentPresenter Grid.Row="2" Content="{Binding Content}" />-->
-    <ContentControl Grid.Row="2" Content="{Binding Control}" />
-
+    <Border Grid.Row="2" Classes="previewBorder">
+      <Border.Styles>
+        <Style Selector="Border.previewBorder">
+          <Setter Property="BorderThickness" Value="1" />
+          <Setter Property="BorderBrush" Value="{StaticResource ThemeBorderHighBrush}" />
+          <Setter Property="Margin" Value="20,4,20,20" />
+        </Style>
+      </Border.Styles>
+      <ContentControl Content="{Binding Control}" />
+    </Border>
 
   </Grid>
-
-  <!--<TextBlock Text="{Binding Greeting}" HorizontalAlignment="Center" VerticalAlignment="Center"/>-->
 
 </Window>
