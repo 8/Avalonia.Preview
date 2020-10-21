@@ -54,12 +54,13 @@ namespace Avalonia.Preview.ViewModels
 
     public MainWindowViewModel(
       IAssemblyService assemblyService,
+      ILoadAssemblyService loadAssemblyService,
       IFileService fileService,
       IControlTypeService controlTypeService,
       IControlService controlService)
     {
       this.assemblyService = assemblyService;
-      this.LoadCommand = ReactiveCommand.Create(() => assemblyService.LoadAssemblyFromPath(this.File));
+      this.LoadCommand = ReactiveCommand.Create(() => loadAssemblyService.File = this.File);
       this.File = fileService.File;
 
       this.subscriptions.Add(

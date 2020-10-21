@@ -21,6 +21,7 @@ namespace Avalonia.Preview.Test
       InlineData(typeof(IControlTypeService)),
       InlineData(typeof(IFileService)),
       InlineData(typeof(IRecentFileService)),
+      InlineData(typeof(IFileWatcherService)),
     ]
     public void ContainerFactoryTest_CreateContainer_Test(Type type)
     {
