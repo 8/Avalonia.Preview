@@ -1,0 +1,42 @@
+﻿<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:vm="clr-namespace:Avalonia.Preview.ViewModels;assembly=Avalonia.Preview"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+        x:Class="Avalonia.Preview.Views.MainWindow"
+        Icon="/Assets/avalonia-logo.ico"
+        Title="Avalonia.Preview"
+        Width="800"
+        Height="600">
+
+  <Design.DataContext>
+    <vm:MainWindowViewModel/>
+  </Design.DataContext>
+
+  <Grid RowDefinitions="Auto, Auto, *">
+    <Grid RowDefinitions="Auto" ColumnDefinitions="Auto, *, Auto">
+      <TextBlock Text="File" />
+      <TextBox Grid.Column="1" Text="{Binding File}" />
+      <Button Grid.Column="2" Content="Load" Command="{Binding LoadCommand}" />
+    </Grid>
+
+    <Grid Grid.Row="1" ColumnDefinitions="Auto,  *">
+      <TextBlock Grid.Column="0" Text="Control Type" />
+      <DropDown Grid.Column="1" Items="{Binding Controls}" SelectedItem="{Binding SelectedControl, Mode=TwoWay}" />
+    </Grid>
+
+    <!--<ContentControl Grid.Row="2" Content="{Binding Content}" />-->
+    <!--<ContentControl Grid.Row="2" Content="{Binding Content}">-->
+      <!--<TextBlock Text="Defualt vaule" />-->
+    <!--</ContentControl>-->
+
+    <!--<ContentPresenter Grid.Row="2" Content="{Binding Content}" />-->
+    <ContentControl Grid.Row="2" Content="{Binding Control}" />
+
+
+  </Grid>
+
+  <!--<TextBlock Text="{Binding Greeting}" HorizontalAlignment="Center" VerticalAlignment="Center"/>-->
+
+</Window>
