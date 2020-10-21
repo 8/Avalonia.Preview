@@ -4,9 +4,9 @@ namespace Avalonia.Preview.Services
 {
   public interface IRecentFileService
   {
-    SourceList<string> RecentFiles { get; }    
+    SourceList<string> RecentFiles { get; }
   }
-  
+
   public class RecentFileService : IRecentFileService
   {
     public SourceList<string> RecentFiles { get; }
@@ -14,7 +14,8 @@ namespace Avalonia.Preview.Services
 
     public RecentFileService()
     {
-      this.RecentFiles.Add(@"C:\projects\Avalonia.Preview\ControlLibrary\bin\Debug\netcoreapp3.1\ControlLibrary.dll");
+      this.RecentFiles.Add(
+        @"C:\projects\AvaloniaPreviewTest\AvaloniaPreviewTest\bin\Debug\netcoreapp3.1\AvaloniaPreviewTest.dll");
     }
   }
 }

@@ -1,7 +1,9 @@
 ﻿using System;
 using System.IO;
+using System.Reactive.Concurrency;
 using System.Reactive.Linq;
 using System.Reactive.Subjects;
+using Avalonia.Threading;
 
 namespace Avalonia.Preview.Services
 {
@@ -14,6 +16,8 @@ namespace Avalonia.Preview.Services
   public class FileWatcherService : IFileWatcherService
   {
     FileSystemWatcher watcher;
+    // IObservable<FileSystemEventArgs> watcherChanged;
+    IDisposable watcherChangedSubscription;
     readonly Subject<string> fileChangedSubject = new Subject<string>();
     public IObservable<string> FileChanged => this.fileChangedSubject.AsObservable();
 
@@ -28,29 +32,37 @@ namespace Avalonia.Preview.Services
       }
     }
 
-    public FileWatcherService()
-    {
-    }
-
     void WatchFile(string file)
     {
       this.watcher?.Dispose();
       this.watcher = null;
+      this.watcherChangedSubscription?.Dispose();
+      this.watcherChangedSubscription = null;
 
-      this.watcher = CreateWatcher(file);
-      this.watcher.Changed += (o, e) => this.fileChangedSubject.OnNext(e.FullPath);
+      if (file != null)
+      {
+        this.watcher = CreateWatcher(file);
+
+        var observable = Observable.FromEventPattern<FileSystemEventHandler, FileSystemEventArgs>(
+          h => watcher.Changed += h,
+          h => watcher.Changed -= h);
+
+        this.watcherChangedSubscription = observable
+            .Subscribe(change => this.fileChangedSubject.OnNext(change.EventArgs.FullPath));
+      }
     }
 
     FileSystemWatcher CreateWatcher(string filePath)
     {
       var fileName = Path.GetFileName(filePath);
-      var directory = Path.GetDirectoryName(filePath) ?? throw new ArgumentException($"{filePath} does not contain a directory!");
+      var directory = Path.GetDirectoryName(filePath) ??
+                      throw new ArgumentException($"{filePath} does not contain a directory!");
       return new FileSystemWatcher
       {
         Path = directory,
-        EnableRaisingEvents = true,
         Filter = fileName,
         NotifyFilter = NotifyFilters.LastWrite,
+        EnableRaisingEvents = true,
       };
     }
   }

@@ -1,8 +1,10 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Reactive.Linq;
 using System.Reactive.Subjects;
 using System.Runtime.CompilerServices;
+using System.Threading;
 using ReactiveUI;
 
 namespace Avalonia.Preview.Services
@@ -11,34 +13,39 @@ namespace Avalonia.Preview.Services
   {
     string File { get; set; }
   }
-  
+
   public class LoadAssemblyService : ReactiveObject, ILoadAssemblyService
   {
-    readonly BehaviorSubject<string> file = new BehaviorSubject<string>(null); 
+    readonly IAssemblyService assemblyService;
+    readonly BehaviorSubject<string> file = new BehaviorSubject<string>(null);
     public string File
     {
       get => this.file.Value;
       set => this.file.OnNext(value);
     }
 
-    IDisposable subscription;
-    
+    List<IDisposable> subscriptions = new List<IDisposable>();
+
     public LoadAssemblyService(
       IAssemblyService assemblyService,
       IFileWatcherService fileWatcherService)
     {
-      this.subscription =
-        this.file
-          .CombineLatest(Observable.Return(string.Empty).Merge(fileWatcherService.FileChanged), 
-            (file, fileChanged) => new {file, fileChanged})
-        .Subscribe(change =>
-        {
-          if (change.file != null)
-          {
-            var target = CopyFile(change.file);
-            assemblyService.LoadAssemblyFromPath(target);
-          }
-        });
+      this.assemblyService = assemblyService;
+      this.subscriptions.Add(this.file.Subscribe(file =>
+      {
+        fileWatcherService.WatchedFile = file;
+        LoadFile(file);
+      }));
+      this.subscriptions.Add(fileWatcherService.FileChanged.Subscribe(LoadFile));
+    }
+
+    void LoadFile(string file)
+    {
+      if (file != null)
+      {
+        var target = Retry(() => CopyFile(file), 3, TimeSpan.FromMilliseconds(200));
+        this.assemblyService.LoadAssemblyFromPath(target);
+      }
     }
 
     public string GetTargetFilePath(string sourceFilePath)
@@ -49,6 +56,22 @@ namespace Avalonia.Preview.Services
       string fileName = $"{origName}-{g}{extension}";
       string directory = Path.GetTempPath();
       return Path.Combine(directory, fileName);
+    }
+
+    T Retry<T>(Func<T> action, int maxRetries, TimeSpan wait) where T : class
+    {
+      int retry = 0;
+      T result = null;
+      do
+      {
+        try
+        {
+          result = action();
+        }
+        catch (Exception ex) { Thread.Sleep(wait); }
+      } while (result == null && retry++ < maxRetries);
+
+      return result;
     }
 
     public string CopyFile(string file)

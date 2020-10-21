@@ -23,7 +23,7 @@ namespace Avalonia.Preview.Services
 
     T CreateInstance<T>(Type controlType) where T : class
       => controlType?.GetConstructor(new Type[0])?.Invoke(null) as T;
-    
+
     public ControlService(IControlTypeService controlTypeService)
     {
       this.subscription = controlTypeService.WhenAnyValue(s => s.SelectedControlType)

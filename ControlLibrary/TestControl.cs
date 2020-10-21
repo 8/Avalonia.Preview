@@ -6,7 +6,7 @@ namespace ControlLibrary
   {
     public TestControl()
     {
-      this.Content = new TextBlock { Text = "This is a test." };
+      this.Content = new TextBlock {Text = "This is a test."};
     }
   }
 

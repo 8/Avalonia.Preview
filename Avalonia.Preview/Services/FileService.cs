@@ -7,7 +7,7 @@ namespace Avalonia.Preview.Services
   {
     string SelectedFile { get; set; }
   }
-  
+
   public class FileService : ReactiveObject, IFileService
   {
     string selectedFile;
