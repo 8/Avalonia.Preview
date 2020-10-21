@@ -38,7 +38,7 @@
       <TextBlock Grid.Row="1" Grid.Column="0" Text="Control Type" />
       <ComboBox Grid.Row="1" Grid.Column="1"
                 Items="{Binding Controls}"
-                SelectedItem="{Binding SelectedControl}" />
+                SelectedItem="{Binding SelectedControl, Mode=TwoWay}" />
 
       <!--<TextBlock Grid.Row="2" Text="Preview" />-->
     </Grid>

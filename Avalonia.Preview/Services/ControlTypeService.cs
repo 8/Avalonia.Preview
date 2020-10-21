@@ -43,8 +43,16 @@ namespace Avalonia.Preview.Services
         {
           Dispatcher.UIThread.Post(() =>
           {
+            var prevSelectedTypeFullName = this.SelectedControlType?.FullName;
+            
             this.controlTypesSource.Clear();
             this.controlTypesSource.AddRange(controlTypes);
+
+            if (prevSelectedTypeFullName != null)
+            {
+              this.SelectedControlType = controlTypes.FirstOrDefault(type => type.FullName == prevSelectedTypeFullName);
+            }
+            
           });
         });
     }

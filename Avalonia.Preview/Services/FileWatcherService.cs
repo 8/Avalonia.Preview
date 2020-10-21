@@ -16,7 +16,6 @@ namespace Avalonia.Preview.Services
   public class FileWatcherService : IFileWatcherService
   {
     FileSystemWatcher watcher;
-    // IObservable<FileSystemEventArgs> watcherChanged;
     IDisposable watcherChangedSubscription;
     readonly Subject<string> fileChangedSubject = new Subject<string>();
     public IObservable<string> FileChanged => this.fileChangedSubject.AsObservable();
