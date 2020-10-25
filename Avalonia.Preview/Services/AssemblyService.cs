@@ -13,12 +13,12 @@ namespace Avalonia.Preview.Services
 
   public class AssemblyService : ReactiveObject, IAssemblyService
   {
-    Assembly assembly;
+    Assembly _assembly;
 
     public Assembly Assembly
     {
-      get => this.assembly;
-      set => this.RaiseAndSetIfChanged(ref assembly, value);
+      get => this._assembly;
+      set => this.RaiseAndSetIfChanged(ref _assembly, value);
     }
 
     public void LoadAssemblyFromPath(string file)

@@ -9,7 +9,7 @@ namespace Avalonia.Preview
 {
   public class App : Application
   {
-    ILifetimeScope Container;
+    ILifetimeScope _container;
     
     public override void Initialize()
     {
@@ -18,13 +18,13 @@ namespace Avalonia.Preview
 
     public override void OnFrameworkInitializationCompleted()
     {
-      this.Container = new ContainerFactory().CreateContainer();
+      this._container = new ContainerFactory().CreateContainer();
       
       if (ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
       {
         var window =  new MainWindow
         {
-          DataContext = this.container.Resolve<IMainWindowViewModel>(),
+          DataContext = this._container.Resolve<IMainWindowViewModel>(),
         };
         
         #if DEBUG

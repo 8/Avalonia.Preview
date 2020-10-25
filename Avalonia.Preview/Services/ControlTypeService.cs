@@ -17,16 +17,16 @@ namespace Avalonia.Preview.Services
 
   public class ControlTypeService : ReactiveObject, IControlTypeService
   {
-    readonly SourceList<Type> controlTypesSource = new SourceList<Type>();
-    public IObservableList<Type> ControlTypes => this.controlTypesSource.AsObservableList();
+    readonly SourceList<Type> _controlTypesSource = new SourceList<Type>();
+    public IObservableList<Type> ControlTypes => this._controlTypesSource.AsObservableList();
 
-    Type selectedControlSelectedControlType;
-    IDisposable subscription;
+    Type _selectedControlSelectedControlType;
+    IDisposable _subscription;
 
     public Type SelectedControlType
     {
-      get => this.selectedControlSelectedControlType;
-      set => this.RaiseAndSetIfChanged(ref this.selectedControlSelectedControlType, value);
+      get => this._selectedControlSelectedControlType;
+      set => this.RaiseAndSetIfChanged(ref this._selectedControlSelectedControlType, value);
     }
 
     static Type[] LoadTypes(Assembly assembly)
@@ -36,7 +36,7 @@ namespace Avalonia.Preview.Services
 
     public ControlTypeService(IAssemblyService assemblyService)
     {
-      this.subscription = assemblyService.WhenAnyValue(s => s.Assembly)
+      this._subscription = assemblyService.WhenAnyValue(s => s.Assembly)
         .Select(LoadTypes)
         .Where(types => types != null)
         .Subscribe(controlTypes =>
@@ -45,8 +45,8 @@ namespace Avalonia.Preview.Services
           {
             var prevSelectedTypeFullName = this.SelectedControlType?.FullName;
             
-            this.controlTypesSource.Clear();
-            this.controlTypesSource.AddRange(controlTypes);
+            this._controlTypesSource.Clear();
+            this._controlTypesSource.AddRange(controlTypes);
 
             if (prevSelectedTypeFullName != null)
             {

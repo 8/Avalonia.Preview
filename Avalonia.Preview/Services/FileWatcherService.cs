@@ -15,39 +15,39 @@ namespace Avalonia.Preview.Services
 
   public class FileWatcherService : IFileWatcherService
   {
-    FileSystemWatcher watcher;
-    IDisposable watcherChangedSubscription;
-    readonly Subject<string> fileChangedSubject = new Subject<string>();
-    public IObservable<string> FileChanged => this.fileChangedSubject.AsObservable();
+    FileSystemWatcher _watcher;
+    IDisposable _watcherChangedSubscription;
+    readonly Subject<string> _fileChangedSubject = new Subject<string>();
+    public IObservable<string> FileChanged => this._fileChangedSubject.AsObservable();
 
-    string watchedFile;
+    string _watchedFile;
     public string WatchedFile
     {
-      get => this.watchedFile;
+      get => this._watchedFile;
       set
       {
-        watchedFile = value;
+        _watchedFile = value;
         this.WatchFile(value);
       }
     }
 
     void WatchFile(string file)
     {
-      this.watcher?.Dispose();
-      this.watcher = null;
-      this.watcherChangedSubscription?.Dispose();
-      this.watcherChangedSubscription = null;
+      this._watcher?.Dispose();
+      this._watcher = null;
+      this._watcherChangedSubscription?.Dispose();
+      this._watcherChangedSubscription = null;
 
       if (file != null)
       {
-        this.watcher = CreateWatcher(file);
+        this._watcher = CreateWatcher(file);
 
         var observable = Observable.FromEventPattern<FileSystemEventHandler, FileSystemEventArgs>(
-          h => watcher.Changed += h,
-          h => watcher.Changed -= h);
+          h => _watcher.Changed += h,
+          h => _watcher.Changed -= h);
 
-        this.watcherChangedSubscription = observable
-            .Subscribe(change => this.fileChangedSubject.OnNext(change.EventArgs.FullPath));
+        this._watcherChangedSubscription = observable
+            .Subscribe(change => this._fileChangedSubject.OnNext(change.EventArgs.FullPath));
       }
     }
 

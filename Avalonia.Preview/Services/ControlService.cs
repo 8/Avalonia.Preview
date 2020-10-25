@@ -12,13 +12,13 @@ namespace Avalonia.Preview.Services
 
   public class ControlService : ReactiveObject, IControlService
   {
-    Control control;
-    IDisposable subscription;
+    Control _control;
+    IDisposable _subscription;
 
     public Control Control
     {
-      get => this.control;
-      set => this.RaiseAndSetIfChanged(ref control, value);
+      get => this._control;
+      set => this.RaiseAndSetIfChanged(ref _control, value);
     }
 
     T CreateInstance<T>(Type controlType) where T : class
@@ -26,7 +26,7 @@ namespace Avalonia.Preview.Services
 
     public ControlService(IControlTypeService controlTypeService)
     {
-      this.subscription = controlTypeService.WhenAnyValue(s => s.SelectedControlType)
+      this._subscription = controlTypeService.WhenAnyValue(s => s.SelectedControlType)
         .Select(CreateInstance<Control>)
         .Subscribe(c => this.Control = c);
     }

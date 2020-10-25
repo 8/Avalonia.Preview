@@ -10,11 +10,11 @@ namespace Avalonia.Preview.Services
 
   public class FileService : ReactiveObject, IFileService
   {
-    string selectedFile;
+    string _selectedFile;
     public string SelectedFile
     {
-      get => selectedFile;
-      set => this.RaiseAndSetIfChanged(ref selectedFile, value);
+      get => _selectedFile;
+      set => this.RaiseAndSetIfChanged(ref _selectedFile, value);
     }
 
     public FileService(IRecentFileService recentFileService)

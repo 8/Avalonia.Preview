@@ -16,27 +16,27 @@ namespace Avalonia.Preview.Services
 
   public class LoadAssemblyService : ReactiveObject, ILoadAssemblyService
   {
-    readonly IAssemblyService assemblyService;
-    readonly BehaviorSubject<string> file = new BehaviorSubject<string>(null);
+    readonly IAssemblyService _assemblyService;
+    readonly BehaviorSubject<string> _file = new BehaviorSubject<string>(null);
     public string File
     {
-      get => this.file.Value;
-      set => this.file.OnNext(value);
+      get => this._file.Value;
+      set => this._file.OnNext(value);
     }
 
-    List<IDisposable> subscriptions = new List<IDisposable>();
+    readonly List<IDisposable> _subscriptions = new List<IDisposable>();
 
     public LoadAssemblyService(
       IAssemblyService assemblyService,
       IFileWatcherService fileWatcherService)
     {
-      this.assemblyService = assemblyService;
-      this.subscriptions.Add(this.file.Subscribe(file =>
+      this._assemblyService = assemblyService;
+      this._subscriptions.Add(this._file.Subscribe(file =>
       {
         fileWatcherService.WatchedFile = file;
         LoadFile(file);
       }));
-      this.subscriptions.Add(fileWatcherService.FileChanged.Subscribe(LoadFile));
+      this._subscriptions.Add(fileWatcherService.FileChanged.Subscribe(LoadFile));
     }
 
     void LoadFile(string file)
@@ -44,7 +44,7 @@ namespace Avalonia.Preview.Services
       if (file != null)
       {
         var target = Retry(() => CopyFile(file), 3, TimeSpan.FromMilliseconds(200));
-        this.assemblyService.LoadAssemblyFromPath(target);
+        this._assemblyService.LoadAssemblyFromPath(target);
       }
     }
 
