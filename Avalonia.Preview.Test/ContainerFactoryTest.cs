@@ -17,7 +17,7 @@ namespace Avalonia.Preview.Test
     [Theory,
       InlineData(typeof(IMainWindowViewModel)),
       InlineData(typeof(IControlService)),
-      InlineData(typeof(IAssemblyService)),
+      InlineData(typeof(ILoadAssemblyService)),
       InlineData(typeof(IControlTypeService)),
       InlineData(typeof(IFileService)),
       InlineData(typeof(IRecentFileService)),

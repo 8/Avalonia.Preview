@@ -1,8 +1,8 @@
 ﻿using System.Reactive.Linq;
-using Avalonia.Preview.Services;
 using Moq;
 using Xunit;
 using Xunit.Abstractions;
+using Avalonia.Preview.Services;
 
 namespace Avalonia.Preview.Test.Services
 {
@@ -17,12 +17,10 @@ namespace Avalonia.Preview.Test.Services
     
     LoadAssemblyService CreateService()
     {
-      var mockAssemblyService = new Mock<IAssemblyService>();
       var mockFileWatcherService = new Mock<IFileWatcherService>();
       mockFileWatcherService.Setup(m => m.FileChanged).Returns(Observable.Return(@"c:\temp\testfile.dll"));
       
       return new LoadAssemblyService(
-        mockAssemblyService.Object,
         mockFileWatcherService.Object
       );
     }

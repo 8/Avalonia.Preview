@@ -34,9 +34,11 @@ namespace Avalonia.Preview.Services
         .Where(type => type.IsSubclassOf(typeof(Control)))
         .ToArray();
 
-    public ControlTypeService(IAssemblyService assemblyService)
+    public ControlTypeService(ILoadAssemblyService assemblyService)
     {
-      this._subscription = assemblyService.WhenAnyValue(s => s.Assembly)
+      this._subscription = assemblyService.WhenAnyValue(s => s.LoadedAssembly)
+        .Where(m => m != null)
+        .Select(m => m.Assembly)
         .Select(LoadTypes)
         .Where(types => types != null)
         .Subscribe(controlTypes =>

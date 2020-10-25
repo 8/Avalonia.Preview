@@ -51,10 +51,10 @@ namespace Avalonia.Preview.ViewModels
     public ICommand LoadCommand { get; }
 
     readonly List<IDisposable> subscriptions = new List<IDisposable>();
-    readonly IAssemblyService assemblyService;
+    readonly ILoadAssemblyService assemblyService;
 
     public MainWindowViewModel(
-      IAssemblyService assemblyService,
+      ILoadAssemblyService assemblyService,
       ILoadAssemblyService loadAssemblyService,
       IFileService fileService,
       IControlTypeService controlTypeService,
