@@ -22,10 +22,16 @@ namespace Avalonia.Preview
       
       if (ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
       {
-        desktop.MainWindow = new MainWindow
+        var window =  new MainWindow
         {
-          DataContext = this.Container.Resolve<IMainWindowViewModel>(),
+          DataContext = this.container.Resolve<IMainWindowViewModel>(),
         };
+        
+        #if DEBUG
+        window.AttachDevTools();
+        #endif
+
+        desktop.MainWindow = window;
       }
 
       base.OnFrameworkInitializationCompleted();
