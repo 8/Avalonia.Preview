@@ -40,11 +40,11 @@ namespace Avalonia.Preview.Services
 
       if (file != null)
       {
-        this._watcher = CreateWatcher(file);
+        var watcher = this._watcher = CreateWatcher(file);
 
         var observable = Observable.FromEventPattern<FileSystemEventHandler, FileSystemEventArgs>(
-          h => _watcher.Changed += h,
-          h => _watcher.Changed -= h);
+          h => watcher.Changed += h,
+          h => watcher.Changed -= h);
 
         this._watcherChangedSubscription = observable
             .Subscribe(change => this._fileChangedSubject.OnNext(change.EventArgs.FullPath));

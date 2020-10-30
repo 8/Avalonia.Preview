@@ -15,7 +15,7 @@ namespace Avalonia.Preview.Services
     public RecentFileService()
     {
       this.RecentFiles.Add(
-        @"C:\projects\AvaloniaPreviewTest\AvaloniaPreviewTest\bin\Debug\netcoreapp3.1\AvaloniaPreviewTest.dll");
+        @"C:\projects\AvaloniaPreviewTest\AvaloniaPreviewTest\bin\Debug\netcoreapp5.0\AvaloniaPreviewTest.dll");
     }
   }
 }

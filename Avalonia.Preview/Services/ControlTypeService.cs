@@ -36,9 +36,9 @@ namespace Avalonia.Preview.Services
 
     public ControlTypeService(ILoadAssemblyService assemblyService)
     {
-      this._subscription = assemblyService.WhenAnyValue(s => s.LoadedAssembly)
+      this._subscription = assemblyService.WhenAnyValue(s => s.LoadedAssemblyContext)
         .Where(m => m != null)
-        .Select(m => m.Assembly)
+        .Select(m => m.MainAssembly.Assembly)
         .Select(LoadTypes)
         .Where(types => types != null)
         .Subscribe(controlTypes =>
