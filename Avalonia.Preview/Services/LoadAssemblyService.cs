@@ -96,7 +96,20 @@ namespace Avalonia.Preview.Services
       var dictionary = (ConcurrentDictionary<string, object>) factoriesFieldInfo.GetValue(instance);
       
       /* clear the internal cache */
+      Debug.WriteLine($"{DateTime.Now:hh:mm:ss} Workaround: Resetting DynamicDataCache with {dictionary.Count} items");
+      
       dictionary.Clear();
+    }
+
+    void DisposeLoadedAssemblyContext()
+    {
+      var context = this.LoadedAssemblyContext;
+      if (context != null)
+      {
+        context.Context.Resolving -= TryResolveAssembly;
+        context.Context.Unload();
+      }
+      this.LoadedAssemblyContext = null;
     }
     
     void LoadFile(string file)
@@ -106,8 +119,11 @@ namespace Avalonia.Preview.Services
         var target = Retry(() => CopyFile(file), 3, TimeSpan.FromMilliseconds(200));
         if (target != null)
         {
-          ResetDynamicDataCache();
+          this.DisposeLoadedAssemblyContext();
           
+          ResetDynamicDataCache();
+
+          Debug.WriteLine($"{DateTime.Now:hh:mm:ss} Loading assembly {file}");
           this.LoadedAssemblyContext = this.CreateLoadedAssembly(file, target);
         }
       }
