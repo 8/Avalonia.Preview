@@ -10,7 +10,7 @@ namespace Avalonia.Preview.Views
     {
       InitializeComponent();
 #if DEBUG
-      this.AttachDevTools();
+      // this.AttachDevTools();
 #endif
     }
 

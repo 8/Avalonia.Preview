@@ -38,7 +38,7 @@ namespace Avalonia.Preview
         };
         
         #if DEBUG
-        window.AttachDevTools();
+        // window.AttachDevTools();
         #endif
 
         desktop.MainWindow = window;
