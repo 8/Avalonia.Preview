@@ -41,10 +41,13 @@ namespace Avalonia.Preview.Services
         .Select(m => m.MainAssembly.Assembly)
         .Select(LoadTypes)
         .Where(types => types != null)
+        // .SubscribeOn(RxApp.MainThreadScheduler)
+        .ObserveOn(AvaloniaScheduler.Instance)
+        .SubscribeOn(AvaloniaScheduler.Instance)
         .Subscribe(controlTypes =>
         {
-          Dispatcher.UIThread.Post(() =>
-          {
+          // Dispatcher.UIThread.Post(() =>
+          // {
             var prevSelectedTypeFullName = this.SelectedControlType?.FullName;
             
             this._controlTypesSource.Clear();
@@ -55,7 +58,8 @@ namespace Avalonia.Preview.Services
               this.SelectedControlType = controlTypes.FirstOrDefault(type => type.FullName == prevSelectedTypeFullName);
             }
             
-          });
+          // }
+          // );
         });
     }
   }
