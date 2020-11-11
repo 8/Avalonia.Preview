@@ -10,7 +10,6 @@ using System.Runtime.Loader;
 using System.Threading;
 using ReactiveUI;
 using Avalonia.Preview.Models;
-using FluentAssertions;
 
 namespace Avalonia.Preview.Services
 {
@@ -59,19 +58,6 @@ namespace Avalonia.Preview.Services
       var mainAssembly = new LoadedAssemblyModel(context.LoadFromAssemblyPath(file), source, file);
 
       var loadedAssemblyContext = new LoadedAssemblyContextModel(context, mainAssembly);
-      
-      
-      // foreach (var referencedAssembly in loadedAssemblyContext.MainAssembly.Assembly.GetReferencedAssemblies())
-      // {
-      //   var fileName = this.GetAssemblyFileName(loadedAssemblyContext, referencedAssembly);
-      //
-      //   if (System.IO.File.Exists(fileName))
-      //   {
-      //     ResolveAndAdd(loadedAssemblyContext, referencedAssembly);
-      //   }
-        // TryResolveAssembly(context, referencedAssembly);
-        // ResolveAndAdd(this.LoadedAssemblyContext, referencedAssembly);
-      // }
 
       return loadedAssemblyContext;
     }
