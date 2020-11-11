@@ -1,4 +1,6 @@
-﻿using DynamicData;
+﻿using System;
+using System.Linq;
+using DynamicData;
 
 namespace Avalonia.Preview.Services
 {
@@ -11,11 +13,17 @@ namespace Avalonia.Preview.Services
   {
     public SourceList<string> RecentFiles { get; }
       = new SourceList<string>();
-
-    public RecentFileService()
+    
+    public RecentFileService(ISettingsService settingsService)
     {
-      this.RecentFiles.Add(
-        @"C:\projects\AvaloniaPreviewTest\AvaloniaPreviewTest\bin\Debug\netcoreapp5.0\AvaloniaPreviewTest.dll");
+      this.RecentFiles.AddRange(settingsService.Settings.RecentFiles);
+
+      this.RecentFiles.Connect().Subscribe(_ =>
+      {
+        settingsService.Settings.RecentFiles = this.RecentFiles.Items.ToArray();
+        settingsService.Save();
+      });
     }
+
   }
 }

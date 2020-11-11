@@ -41,25 +41,19 @@ namespace Avalonia.Preview.Services
         .Select(m => m.MainAssembly.Assembly)
         .Select(LoadTypes)
         .Where(types => types != null)
-        // .SubscribeOn(RxApp.MainThreadScheduler)
         .ObserveOn(AvaloniaScheduler.Instance)
         .SubscribeOn(AvaloniaScheduler.Instance)
         .Subscribe(controlTypes =>
         {
-          // Dispatcher.UIThread.Post(() =>
-          // {
-            var prevSelectedTypeFullName = this.SelectedControlType?.FullName;
-            
-            this._controlTypesSource.Clear();
-            this._controlTypesSource.AddRange(controlTypes);
+          var prevSelectedTypeFullName = this.SelectedControlType?.FullName;
+          
+          this._controlTypesSource.Clear();
+          this._controlTypesSource.AddRange(controlTypes);
 
-            if (prevSelectedTypeFullName != null)
-            {
-              this.SelectedControlType = controlTypes.FirstOrDefault(type => type.FullName == prevSelectedTypeFullName);
-            }
-            
-          // }
-          // );
+          if (prevSelectedTypeFullName != null)
+          {
+            this.SelectedControlType = controlTypes.FirstOrDefault(type => type.FullName == prevSelectedTypeFullName);
+          }
         });
     }
   }

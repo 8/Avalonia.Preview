@@ -17,57 +17,62 @@ namespace Avalonia.Preview.ViewModels
 
   public class MainWindowViewModel : ViewModelBase, IMainWindowViewModel
   {
-    string file;
+    string _file;
     public string File
     {
-      get => this.file;
-      set => this.RaiseAndSetIfChanged(ref file, value);
+      get => this._file;
+      set => this.RaiseAndSetIfChanged(ref _file, value);
     }
 
-    readonly ReadOnlyObservableCollection<ControlViewModel> controls;
-    public ReadOnlyObservableCollection<ControlViewModel> Controls => controls;
+    readonly ReadOnlyObservableCollection<ControlViewModel> _controls;
+    public ReadOnlyObservableCollection<ControlViewModel> Controls => _controls;
 
-    ControlViewModel selectedControl;
+    ControlViewModel _selectedControl;
     public ControlViewModel SelectedControl
     {
-      get => this.selectedControl;
-      set => this.RaiseAndSetIfChanged(ref selectedControl, value);
+      get => this._selectedControl;
+      set => this.RaiseAndSetIfChanged(ref _selectedControl, value);
     }
 
-    Type controlType;
+    Type _controlType;
     public Type ControlType
     {
-      get => this.controlType;
-      set => this.RaiseAndSetIfChanged(ref controlType, value);
+      get => this._controlType;
+      set => this.RaiseAndSetIfChanged(ref _controlType, value);
     }
 
-    Control control;
+    Control _control;
     public Control Control
     {
-      get => this.control;
-      set => this.RaiseAndSetIfChanged(ref control, value);
+      get => this._control;
+      set => this.RaiseAndSetIfChanged(ref _control, value);
     }
 
     public ICommand LoadCommand { get; }
 
     readonly List<IDisposable> subscriptions = new List<IDisposable>();
     readonly ILoadAssemblyService assemblyService;
+    readonly ILoadAssemblyService _loadAssemblyService;
+    readonly IRecentFileService _recentFileService;
 
     public MainWindowViewModel(
       ILoadAssemblyService assemblyService,
       ILoadAssemblyService loadAssemblyService,
       IFileService fileService,
       IControlTypeService controlTypeService,
-      IControlService controlService)
+      IControlService controlService,
+      IRecentFileService recentFileService)
     {
       this.assemblyService = assemblyService;
-      this.LoadCommand = ReactiveCommand.Create(() => loadAssemblyService.File = this.File);
+      _loadAssemblyService = loadAssemblyService;
+      _recentFileService = recentFileService;
+      this.LoadCommand = ReactiveCommand.Create(Load);
       this.File = fileService.SelectedFile;
 
       this.subscriptions.Add(
         controlTypeService.ControlTypes.Connect()
           .Select(CreateControlViewModel)
-          .Bind(out this.controls)
+          .Bind(out this._controls)
           .Subscribe()
       );
 
@@ -77,7 +82,7 @@ namespace Avalonia.Preview.ViewModels
       
       this.subscriptions.Add(
         controlTypeService.WhenAnyValue(s => s.SelectedControlType)
-          .Subscribe(type => this.SelectedControl = this.controls.FirstOrDefault(vm => vm.ControlType == type))
+          .Subscribe(type => this.SelectedControl = this._controls.FirstOrDefault(vm => vm.ControlType == type))
         );
 
       this.subscriptions.Add(
@@ -89,5 +94,13 @@ namespace Avalonia.Preview.ViewModels
 
     static ControlViewModel CreateControlViewModel(Type controlType)
       => new ControlViewModel { ControlType = controlType, Name = controlType.Name };
+
+    void Load()
+    {
+      var file = this.File;
+      
+      _loadAssemblyService.File = file;
+      _recentFileService.RecentFiles.Insert(0, file);
+    }
   }
 }

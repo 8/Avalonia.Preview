@@ -47,6 +47,9 @@ namespace Avalonia.Preview.Services
         LoadFile(file);
       }));
       this._subscriptions.Add(fileWatcherService.FileChanged.Subscribe(LoadFile));
+
+      AssemblyLoadContext.Default.Resolving += (context, assemblyName) =>
+        ResolveAndAdd(this.LoadedAssemblyContext, assemblyName);
     }
 
     LoadedAssemblyContextModel CreateLoadedAssembly(string source, string file)
@@ -54,7 +57,44 @@ namespace Avalonia.Preview.Services
       var context = new AssemblyLoadContext("ControlContext", true);
       context.Resolving += TryResolveAssembly;
       var mainAssembly = new LoadedAssemblyModel(context.LoadFromAssemblyPath(file), source, file);
-      return new LoadedAssemblyContextModel(context, mainAssembly);
+
+      var loadedAssemblyContext = new LoadedAssemblyContextModel(context, mainAssembly);
+      
+      
+      // foreach (var referencedAssembly in loadedAssemblyContext.MainAssembly.Assembly.GetReferencedAssemblies())
+      // {
+      //   var fileName = this.GetAssemblyFileName(loadedAssemblyContext, referencedAssembly);
+      //
+      //   if (System.IO.File.Exists(fileName))
+      //   {
+      //     ResolveAndAdd(loadedAssemblyContext, referencedAssembly);
+      //   }
+        // TryResolveAssembly(context, referencedAssembly);
+        // ResolveAndAdd(this.LoadedAssemblyContext, referencedAssembly);
+      // }
+
+      return loadedAssemblyContext;
+    }
+
+    string GetAssemblyFileName(LoadedAssemblyContextModel loadedContext, AssemblyName assemblyName)
+    {
+      string folder = Path.GetDirectoryName(loadedContext.MainAssembly.Source);
+      string fileName = $"{assemblyName.Name}.dll";
+      string source = Path.Combine(folder, fileName);
+      return source;
+    }
+    
+    Assembly ResolveAndAdd(LoadedAssemblyContextModel loadedContext, AssemblyName assemblyName)
+    {
+      var source = GetAssemblyFileName(loadedContext, assemblyName);
+      var target = Retry(() => CopyFile(source), 3, TimeSpan.FromMilliseconds(200));
+      var assembly = target is not null ? loadedContext.Context.LoadFromAssemblyPath(target) : null;
+      if (assembly is not null)
+      {
+        var loadedAssembly = new LoadedAssemblyModel(assembly, source, target);
+        loadedContext.AdditionalAssemblies.Add(loadedAssembly);
+      }
+      return assembly;
     }
 
     Assembly TryResolveAssembly(AssemblyLoadContext context, AssemblyName assemblyName)
@@ -66,17 +106,12 @@ namespace Avalonia.Preview.Services
       {
         context.Resolving -= TryResolveAssembly;
       }
-      else if (loadedContext != null)
+      else 
+      if (loadedContext != null)
       {
         Debug.WriteLine($"Trying to resolve '{assemblyName.Name}'");
-        string folder = Path.GetDirectoryName(loadedContext.MainAssembly.Source);
-        string fileName = $"{assemblyName.Name}.dll";
-        string source = Path.Combine(folder, fileName);
-        var target = Retry(() => CopyFile(source), 3, TimeSpan.FromMilliseconds(200));
-        var assembly = loadedContext.Context.LoadFromAssemblyPath(target);
-        var loadedAssembly = new LoadedAssemblyModel(assembly, source, target);
-        loadedContext.AdditionalAssemblies.Add(loadedAssembly);
-        ret = assembly;
+
+        ret = ResolveAndAdd(loadedContext, assemblyName);;
       }
 
       return ret;

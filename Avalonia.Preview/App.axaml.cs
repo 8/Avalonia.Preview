@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Diagnostics;
 using System.Reactive;
+using System.Reflection;
+using System.Runtime.Loader;
 using Autofac;
 using Avalonia;
 using Avalonia.Controls.ApplicationLifetimes;

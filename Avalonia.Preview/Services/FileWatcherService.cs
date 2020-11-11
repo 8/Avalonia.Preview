@@ -47,7 +47,9 @@ namespace Avalonia.Preview.Services
           h => watcher.Changed -= h);
 
         this._watcherChangedSubscription = observable
-            .Subscribe(change => this._fileChangedSubject.OnNext(change.EventArgs.FullPath));
+          .ObserveOn(AvaloniaScheduler.Instance)
+          .SubscribeOn(AvaloniaScheduler.Instance)
+          .Subscribe(change => this._fileChangedSubject.OnNext(change.EventArgs.FullPath));
       }
     }
 
