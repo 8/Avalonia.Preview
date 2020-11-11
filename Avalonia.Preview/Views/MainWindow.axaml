@@ -7,7 +7,7 @@
         mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
         x:Class="Avalonia.Preview.Views.MainWindow"
         Icon="/Assets/avalonia-logo.ico"
-        Title="Avalonia.Preview"
+        Title="Avalonia Preview"
         Width="800"
         Height="300">
 
@@ -39,8 +39,10 @@
       <ComboBox Grid.Row="1" Grid.Column="1"
                 Items="{Binding Controls}"
                 SelectedItem="{Binding SelectedControl, Mode=TwoWay}" />
-
-      <!--<TextBlock Grid.Row="2" Text="Preview" />-->
+      
+      <CheckBox Grid.Row="2" Content="Always on Top" IsChecked="{Binding IsAlwaysOnTop}" />
+      
+      
     </Grid>
 
     <Grid Grid.Row="1" ColumnDefinitions="*">
@@ -55,7 +57,6 @@
           <Setter Property="Margin" Value="20,4,20,20" />
         </Style>
       </Border.Styles>
-      <!-- <Grid ColumnDefinitions="*, Auto, *" RowDefinitions="*, Auto, *"> -->
       <Grid>
         <ContentControl Content="{Binding Control}" />
       </Grid>
