@@ -27,8 +27,8 @@ namespace Avalonia.Preview.Views
                 .borderThickness(new Thickness(1))
                 .bind(BackgroundProperty, "BackgroundBrush")
                 .bindToDataContext(
-                  Border.PaddingProperty, 
-                  (IMainWindowViewModel vm) => vm.WhenAnyValue(vm => vm.Margin)
+                  Decorator.PaddingProperty, 
+                  (IMainWindowViewModel vm) => vm.WhenAnyValue(vm => vm.Padding)
                     .Select(value => new Thickness(value)))
                 .child(
                   new PreviewView()

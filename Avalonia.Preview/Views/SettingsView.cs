@@ -108,12 +108,12 @@ namespace Avalonia.Preview.Views
               .col(1)
             ,
             new TextBlock()
-              .text("Margin")
+              .text("Padding")
               .classes("label")
               .row(2)
             ,
             new NumericUpDown()
-              .bind(NumericUpDown.ValueProperty, "Margin")
+              .bind(NumericUpDown.ValueProperty, "Padding")
               .row(2)
               .col(1)
               .minimum(0)
@@ -121,7 +121,7 @@ namespace Avalonia.Preview.Views
             ,
             new Slider()
               .classes("slider")
-              .bind(RangeBase.ValueProperty, "Margin")
+              .bind(RangeBase.ValueProperty, "Padding")
               .minimum(0)
               .maximum(100)
               .row(2)

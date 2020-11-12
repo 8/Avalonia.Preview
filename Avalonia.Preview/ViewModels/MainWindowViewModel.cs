@@ -15,7 +15,7 @@ namespace Avalonia.Preview.ViewModels
 {
   public interface IMainWindowViewModel
   {
-    int Margin { get; set; } 
+    int Padding { get; set; } 
   }
 
   public class MainWindowViewModel : ViewModelBase, IMainWindowViewModel
@@ -51,11 +51,11 @@ namespace Avalonia.Preview.ViewModels
       set => this.RaiseAndSetIfChanged(ref _control, value);
     }
 
-    int _margin;
-    public int Margin
+    int _padding;
+    public int Padding
     {
-      get => this._margin;
-      set => this.RaiseAndSetIfChanged(ref _margin, value);
+      get => this._padding;
+      set => this.RaiseAndSetIfChanged(ref _padding, value);
     }
 
     bool _isAlwaysOnTop;
