@@ -150,18 +150,18 @@ namespace Avalonia.Preview.Views
               .bind(ItemsControl.ItemsProperty, "BackgroundColors")
               .bind(SelectingItemsControl.SelectedItemProperty, "SelectedBackgroundColor")
               .classes("combo")
-            ,
-            new TextBlock()
-              .classes("label")
-              .row(5)
-              .text("Theme")
-            ,
-            new ComboBox()
-              .col(1)
-              .row(5)
-              .classes("combo")
-              .bind(ItemsControl.ItemsProperty, "Themes")
-              .bind(SelectingItemsControl.SelectedItemProperty, "SelectedTheme")
+            // ,
+            // new TextBlock()
+            //   .classes("label")
+            //   .row(5)
+            //   .text("Theme")
+            // ,
+            // new ComboBox()
+            //   .col(1)
+            //   .row(5)
+            //   .classes("combo")
+            //   .bind(ItemsControl.ItemsProperty, "Themes")
+            //   .bind(SelectingItemsControl.SelectedItemProperty, "SelectedTheme")
           )
         ;
     }
