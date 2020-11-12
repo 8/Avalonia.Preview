@@ -9,59 +9,61 @@
         Icon="/Assets/avalonia-logo.ico"
         Title="Avalonia Preview"
         Width="800"
-        Height="300">
+        Height="300"
+        Topmost="{Binding IsAlwaysOnTop}"
+        >
 
-  <Grid RowDefinitions="Auto, Auto, *">
-    <Grid ColumnDefinitions="Auto, *, Auto" RowDefinitions="Auto, Auto, Auto">
-      <Grid.Styles>
-        <Style Selector="Button">
-          <!--<Setter Property="Margin" Value="4,2,4,2" />-->
-        </Style>
-        <Style Selector="TextBlock">
-          <Setter Property="Margin" Value="4,2,4,2" />
-          <Setter Property="HorizontalAlignment" Value="Right" />
-          <Setter Property="VerticalAlignment" Value="Center" />
-        </Style>
-        <Style Selector="TextBox">
-          <Setter Property="Margin" Value="4,2,4,2" />
-        </Style>
-        <Style Selector="ComboBox">
-          <Setter Property="Margin" Value="4,2,4,2" />
-          <Setter Property="MinHeight" Value="24" />
-        </Style>
-      </Grid.Styles>
-
-      <TextBlock Text="File" />
-      <TextBox Grid.Column="1" Text="{Binding File}" />
-      <Button Grid.Column="2" Content="Load" Command="{Binding LoadCommand}" />
-
-      <TextBlock Grid.Row="1" Grid.Column="0" Text="Control Type" />
-      <ComboBox Grid.Row="1" Grid.Column="1"
-                Items="{Binding Controls}"
-                SelectedItem="{Binding SelectedControl, Mode=TwoWay}" />
-      
-      <CheckBox Grid.Row="2" Content="Always on Top" IsChecked="{Binding IsAlwaysOnTop}" />
-      
-      
-    </Grid>
-
-    <Grid Grid.Row="1" ColumnDefinitions="*">
-      <TextBlock Text="Preview" Margin="20, 20, 0, 0" FontSize="12" HorizontalAlignment="Left" />
-    </Grid>
-
-    <Border Grid.Row="2" Classes="previewBorder">
-      <Border.Styles>
-        <Style Selector="Border.previewBorder">
-          <Setter Property="BorderThickness" Value="1" />
-          <Setter Property="BorderBrush" Value="{StaticResource ThemeBorderHighBrush}" />
-          <Setter Property="Margin" Value="20,4,20,20" />
-        </Style>
-      </Border.Styles>
-      <Grid>
-        <ContentControl Content="{Binding Control}" />
-      </Grid>
-    </Border>
-
-  </Grid>
+  <v:MainView />
+  <!-- <Grid RowDefinitions="Auto, Auto, *"> -->
+  <!--   <Grid ColumnDefinitions="Auto, *, Auto" RowDefinitions="Auto, Auto, Auto"> -->
+  <!--     <Grid.Styles> -->
+  <!--       <Style Selector="Button"> -->
+  <!--       </Style> -->
+  <!--       <Style Selector="TextBlock"> -->
+  <!--         <Setter Property="Margin" Value="4,2,4,2" /> -->
+  <!--         <Setter Property="HorizontalAlignment" Value="Right" /> -->
+  <!--         <Setter Property="VerticalAlignment" Value="Center" /> -->
+  <!--       </Style> -->
+  <!--       <Style Selector="TextBox"> -->
+  <!--         <Setter Property="Margin" Value="4,2,4,2" /> -->
+  <!--       </Style> -->
+  <!--       <Style Selector="ComboBox"> -->
+  <!--         <Setter Property="Margin" Value="4,2,4,2" /> -->
+  <!--         <Setter Property="MinHeight" Value="24" /> -->
+  <!--       </Style> -->
+  <!--     </Grid.Styles> -->
+  <!-- -->
+  <!--     <TextBlock Text="File" /> -->
+  <!--     <TextBox Grid.Column="1" Text="{Binding File}" /> -->
+  <!--     <Button Grid.Column="2" Content="Load" Command="{Binding LoadCommand}" /> -->
+  <!-- -->
+  <!--     <TextBlock Grid.Row="1" Grid.Column="0" Text="Control Type" /> -->
+  <!--     <ComboBox Grid.Row="1" Grid.Column="1" -->
+  <!--               Items="{Binding Controls}" -->
+  <!--               SelectedItem="{Binding SelectedControl, Mode=TwoWay}" /> -->
+  <!-- -->
+  <!--     <CheckBox Grid.Row="2" Content="Always on Top" IsChecked="{Binding IsAlwaysOnTop}" /> -->
+  <!-- -->
+  <!-- -->
+  <!--   </Grid> -->
+  <!-- -->
+  <!--   <Grid Grid.Row="1" ColumnDefinitions="*"> -->
+  <!--     <TextBlock Text="Preview" Margin="20, 20, 0, 0" FontSize="12" HorizontalAlignment="Left" /> -->
+  <!--   </Grid> -->
+  <!-- -->
+  <!--   <Border Grid.Row="2" Classes="previewBorder"> -->
+  <!--     <Border.Styles> -->
+  <!--       <Style Selector="Border.previewBorder"> -->
+  <!--         <Setter Property="BorderThickness" Value="1" /> -->
+  <!--         <Setter Property="BorderBrush" Value="{StaticResource ThemeBorderHighBrush}" /> -->
+  <!--         <Setter Property="Margin" Value="20,4,20,20" /> -->
+  <!--       </Style> -->
+  <!--     </Border.Styles> -->
+  <!--     <Grid> -->
+  <!--       <ContentControl Content="{Binding Control}" /> -->
+  <!--     </Grid> -->
+  <!--   </Border> -->
+  <!-- -->
+  <!-- </Grid> -->
 
 </Window>

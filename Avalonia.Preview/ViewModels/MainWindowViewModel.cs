@@ -2,17 +2,20 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
+using System.Reactive.Linq;
 using System.Windows.Input;
 using ReactiveUI;
 using DynamicData;
 using DynamicData.Alias;
 using Avalonia.Controls;
+using Avalonia.Media;
 using Avalonia.Preview.Services;
 
 namespace Avalonia.Preview.ViewModels
 {
   public interface IMainWindowViewModel
   {
+    int Margin { get; set; } 
   }
 
   public class MainWindowViewModel : ViewModelBase, IMainWindowViewModel
@@ -48,22 +51,65 @@ namespace Avalonia.Preview.ViewModels
       set => this.RaiseAndSetIfChanged(ref _control, value);
     }
 
+    int _margin;
+    public int Margin
+    {
+      get => this._margin;
+      set => this.RaiseAndSetIfChanged(ref _margin, value);
+    }
+
+    bool _isAlwaysOnTop;
+    public bool IsAlwaysOnTop
+    {
+      get => this._isAlwaysOnTop;
+      set => this.RaiseAndSetIfChanged(ref _isAlwaysOnTop, value);
+    }
+
+    public string[] BackgroundColors { get; }
+
+    string _selectedBackgroundColor;
+    public string SelectedBackgroundColor
+    {
+      get => _selectedBackgroundColor;
+      set => this.RaiseAndSetIfChanged(ref _selectedBackgroundColor, value);
+    }
+
+    ReadOnlyObservableCollection<string> _themes;
+    public ReadOnlyObservableCollection<string> Themes
+    {
+      get => _themes;
+      set => this.RaiseAndSetIfChanged(ref _themes, value);
+    }
+
+    string _selectedTheme;
+    public string SelectedTheme
+    {
+      get => this._selectedTheme;
+      set => this.RaiseAndSetIfChanged(ref _selectedTheme, value);
+    }
+
+    SolidColorBrush _backgroundBrush;
+    public SolidColorBrush BackgroundBrush
+    {
+      get => _backgroundBrush;
+      set => this.RaiseAndSetIfChanged(ref _backgroundBrush, value);
+    }
+
     public ICommand LoadCommand { get; }
 
     readonly List<IDisposable> subscriptions = new List<IDisposable>();
-    readonly ILoadAssemblyService assemblyService;
     readonly ILoadAssemblyService _loadAssemblyService;
     readonly IRecentFileService _recentFileService;
 
     public MainWindowViewModel(
-      ILoadAssemblyService assemblyService,
       ILoadAssemblyService loadAssemblyService,
       IFileService fileService,
       IControlTypeService controlTypeService,
       IControlService controlService,
-      IRecentFileService recentFileService)
+      IRecentFileService recentFileService,
+      IThemeService themeService,
+      IColorService colorService)
     {
-      this.assemblyService = assemblyService;
       _loadAssemblyService = loadAssemblyService;
       _recentFileService = recentFileService;
       this.LoadCommand = ReactiveCommand.Create(Load);
@@ -88,6 +134,28 @@ namespace Avalonia.Preview.ViewModels
       this.subscriptions.Add(
          controlService.WhenAnyValue(s => s.Control)
            .Subscribe(c => this.Control = c));
+
+      this.subscriptions.Add(
+        themeService.Themes.Connect().Bind(out _themes).Subscribe()
+      );
+      
+      this.subscriptions.Add(
+        themeService.WhenAnyValue(s => s.SelectedTheme).Subscribe(theme => this.SelectedTheme = theme)
+      );
+      
+      this.subscriptions.Add(
+        this.WhenAnyValue(vm => vm.SelectedTheme).Subscribe(theme => this.SelectedTheme = theme)
+      );
+
+      this.BackgroundColors = colorService.Colors;
+      this.SelectedBackgroundColor = this.BackgroundColors.FirstOrDefault();
+
+      this.subscriptions.Add(
+    this.WhenAnyValue(vm => vm.SelectedBackgroundColor)
+        .Select(colorService.GetColorFromName)
+        .Select(color => new SolidColorBrush(color ?? Colors.Transparent, 1))
+        .Subscribe(brush => this.BackgroundBrush = brush)
+      );
 
       this.Control = null;
     }
