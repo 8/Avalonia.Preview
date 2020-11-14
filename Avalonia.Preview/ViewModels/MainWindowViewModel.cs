@@ -15,7 +15,9 @@ namespace Avalonia.Preview.ViewModels
 {
   public interface IMainWindowViewModel
   {
-    int Padding { get; set; } 
+    int Padding { get; set; }
+    int Margin { get; set; }
+    int BorderThickness { get; set; }
   }
 
   public class MainWindowViewModel : ViewModelBase, IMainWindowViewModel
@@ -58,6 +60,34 @@ namespace Avalonia.Preview.ViewModels
       set => this.RaiseAndSetIfChanged(ref _padding, value);
     }
 
+    int _margin;
+    public int Margin
+    {
+      get => this._margin;
+      set => this.RaiseAndSetIfChanged(ref _margin, value);
+    }
+
+    int _borderThickness;
+    public int BorderThickness
+    {
+      get => this._borderThickness;
+      set => this.RaiseAndSetIfChanged(ref _borderThickness, value);
+    }
+
+    string _selectedBorderColor;
+    public string SelectedBorderColor
+    {
+      get => _selectedBorderColor;
+      set => this.RaiseAndSetIfChanged(ref _selectedBorderColor, value);
+    }
+
+    IBrush _borderBrush;
+    public IBrush BorderBrush
+    {
+      get => _borderBrush;
+      set => this.RaiseAndSetIfChanged(ref _borderBrush, value);
+    }
+
     bool _isAlwaysOnTop;
     public bool IsAlwaysOnTop
     {
@@ -65,7 +95,7 @@ namespace Avalonia.Preview.ViewModels
       set => this.RaiseAndSetIfChanged(ref _isAlwaysOnTop, value);
     }
 
-    public string[] BackgroundColors { get; }
+    public string[] Colors { get; }
 
     string _selectedBackgroundColor;
     public string SelectedBackgroundColor
@@ -94,7 +124,7 @@ namespace Avalonia.Preview.ViewModels
       get => _backgroundBrush;
       set => this.RaiseAndSetIfChanged(ref _backgroundBrush, value);
     }
-
+    
     public ICommand LoadCommand { get; }
 
     readonly List<IDisposable> subscriptions = new List<IDisposable>();
@@ -147,14 +177,22 @@ namespace Avalonia.Preview.ViewModels
         this.WhenAnyValue(vm => vm.SelectedTheme).Subscribe(theme => this.SelectedTheme = theme)
       );
 
-      this.BackgroundColors = colorService.Colors;
-      this.SelectedBackgroundColor = this.BackgroundColors.FirstOrDefault();
+      this.Colors = colorService.Colors;
+      this.SelectedBackgroundColor = this.Colors.FirstOrDefault();
+      this.SelectedBorderColor = this.Colors.FirstOrDefault();
 
       this.subscriptions.Add(
     this.WhenAnyValue(vm => vm.SelectedBackgroundColor)
         .Select(colorService.GetColorFromName)
-        .Select(color => new SolidColorBrush(color ?? Colors.Transparent, 1))
+        .Select(color => new SolidColorBrush(color ?? Media.Colors.Transparent, 1))
         .Subscribe(brush => this.BackgroundBrush = brush)
+      );
+      
+      this.subscriptions.Add(
+        this.WhenAnyValue(vm => vm.SelectedBorderColor)
+          .Select(colorService.GetColorFromName)
+          .Select(color => new SolidColorBrush(color ?? Media.Colors.Transparent, 1))
+          .Subscribe(brush => this.BorderBrush = brush)
       );
 
       this.Control = null;

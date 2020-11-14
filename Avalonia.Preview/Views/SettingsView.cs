@@ -3,6 +3,7 @@ using Avalonia.Controls.Primitives;
 using Avalonia.Fluent;
 using Avalonia.Layout;
 using Avalonia.Styling;
+
 using static Avalonia.Fluent.GridEx;
 using static Avalonia.Fluent.Styles;
 
@@ -70,6 +71,9 @@ namespace Avalonia.Preview.Views
             row().auto(),
             row().auto(),
             row().auto(),
+            row().auto(),
+            row().auto(),
+            row().auto(),
             row().star()
           )
           .children(
@@ -128,26 +132,85 @@ namespace Avalonia.Preview.Views
               .col(2)
               .colSpan(2)
             ,
+            
             new TextBlock()
+              .text("Margin")
               .classes("label")
               .row(3)
+            ,
+            new NumericUpDown()
+              .bind(NumericUpDown.ValueProperty, "Margin")
+              .row(3)
+              .col(1)
+              .minimum(0)
+              .maximum(100)
+            ,
+            new Slider()
+              .classes("slider")
+              .bind(RangeBase.ValueProperty, "Margin")
+              .minimum(0)
+              .maximum(100)
+              .row(3)
+              .col(2)
+              .colSpan(2)
+            ,
+            
+            new TextBlock()
+              .classes("label")
+              .row(4)
               .text("Always on Top")
             ,
             new CheckBox()
-              .row(3)
+              .row(4)
               .col(1)
               .classes("checkbox")
               .bind(ToggleButton.IsCheckedProperty, "IsAlwaysOnTop")
             ,
+            
+            new TextBlock()
+              .row(5)
+              .classes("label")
+              .text("Border Width")
+            ,
+            new NumericUpDown()
+              .row(5)
+              .col(1)
+              .bind(NumericUpDown.ValueProperty, "BorderThickness")
+              .minimum(0)
+              .maximum(4)
+            ,
+            new Slider()
+              .row(5)
+              .col(2)
+              .colSpan(2)
+              .bind(RangeBase.ValueProperty, "BorderThickness")
+              .minimum(0)
+              .maximum(4)
+              .classes("slider")
+            ,
+            
+            new TextBlock()
+              .row(6)
+              .classes("label")
+              .text("Border Color")
+            ,
+            new ComboBox()
+              .row(6)
+              .col(1)
+              .bind(ItemsControl.ItemsProperty, "Colors")
+              .bind(SelectingItemsControl.SelectedItemProperty, "SelectedBorderColor")
+              .classes("combo")
+            ,
+            
             new TextBlock()
               .classes("label")
-              .row(4)
+              .row(7)
               .text("Background")
             ,
             new ComboBox()
               .col(1)
-              .row(4)
-              .bind(ItemsControl.ItemsProperty, "BackgroundColors")
+              .row(7)
+              .bind(ItemsControl.ItemsProperty, "Colors")
               .bind(SelectingItemsControl.SelectedItemProperty, "SelectedBackgroundColor")
               .classes("combo")
             // ,
