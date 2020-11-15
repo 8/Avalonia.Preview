@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Diagnostics;
 using System.Reactive.Linq;
+using Windows.ApplicationModel;
 using Avalonia.Controls;
 using Avalonia.Threading;
 using ReactiveUI;
@@ -24,9 +25,8 @@ namespace Avalonia.Preview.Services
     }
 
     T CreateInstance<T>(Type controlType) where T : class =>
-      // controlType is not null ? Activator.CreateInstance(controlType) as T : null;
       controlType?.GetConstructor(new Type[0])?.Invoke(null) as T;
-  
+
     public ControlService(IControlTypeService controlTypeService)
     {
       this._subscription = controlTypeService.WhenAnyValue(s => s.SelectedControlType)
@@ -34,6 +34,11 @@ namespace Avalonia.Preview.Services
         .ObserveOn(AvaloniaScheduler.Instance)
         .SubscribeOn(AvaloniaScheduler.Instance)
         .Select(CreateInstance<Control>)
+        .Do(c =>
+        {
+          if (c is not null)
+            c.DataContext = c.GetValue(Design.DataContextProperty);
+        })
         .Subscribe(c => this.Control = c);
     }
   }
